@@ -1,2 +1,2 @@
-# terraform-
+# terraform
 Repo for terraform examples
