@@ -4,6 +4,7 @@ provider "aws" {
 
 #data
 
+
 data "aws_vpc" "default" {
   default = true
 }
@@ -157,6 +158,16 @@ resource "aws_lb_listener_rule" "asg" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.asg.arn
   }
+}
+
+data "terraform_remote_state" "db" {
+    backend = "s3"
+
+    config = {
+        bucket = "lrofpqx"
+        key = "stage/data-stores/mysql/terraform.tfstate"
+        region = "us-east-2"
+    }
 }
 
 # Configure terraform to store state in S3 bucket (encryption and locking) w/ backend configuration

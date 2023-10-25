@@ -11,24 +11,21 @@ resource "aws_db_instance" "example" {
     instance_class = "db.t2.micro"  
     skip_final_snapshot = true
     db_name = var.db_name
-
     # How should we set the username and password/secrets?
     username = var.db_username
     password = var.db_password
 }
 
-# Configure terraform to store state in S3 bucket (encryption and locking) w/ backend configuration
-terraform {
-  backend "s3" {
-    bucket = "lrofpqx"
-    # filepath in s3 bucket where tf state file written
-    key = "stage/data-stores/mysql/terraform.tfstate"
-    region = "us-east-2"
 
-    #dynamodb table
-    dynamodb_table = "terraform-up-and-running-locks"
-    encrypt = true
-  }
-  
-}
 
+#configures web server cluster to read state file from same s3 bucket/folder where
+#database stores its state
+# data "terraform_remote_state" "db" {
+#     backend = "s3"
+
+#     config = {
+#         bucket = "lrofpqx"
+#         key = "stage/data-stores/mysql/terraform.tfstate"
+#         region = "us-east-2"
+#     }
+# }
