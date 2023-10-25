@@ -24,11 +24,18 @@ resource "aws_launch_configuration" "example" {
   #User data runs on the first initial boot 
   # Bash script writes text into index.html and runs busybox to start web server on port 8080 to serve that file
 
-  user_data = <<-EOF
+  #user_data = <<-EOF
                 #!/bin/bash
-                echo "Hello, World" > index.html
-                nohup busybox httpd -f -p ${var.server_port} &
-                EOF
+                #echo "Hello, World" > index.html
+               # nohup busybox httpd -f -p ${var.server_port} &
+                #EOF
+
+  # Render user data script as a template
+  user_data = templatefile("user-data.sh", {
+    server_port = var.server_port
+    db_address = data.terraform_remote_state.db.outputs.address
+    db_port = data.terraform_remote_state.db.outputs.port
+  })
 
   # Required when using a launch configuration with an auto scaling group 
   # it configures how that resource is created, updated, and/or deleted
@@ -68,17 +75,7 @@ resource "aws_security_group" "instance" {
   }
 }
 
-variable "server_port" {
-  description = "The port the server will use for HTTP requests"
-  type        = number
-  default     = 8080
-}
 
-#output that shows DNS name of ALB 
-output "alb_dns_name" {
-  value       = aws_lb.example.dns_name
-  description = "The domain name of the load balancer"
-}
 
 #create ALB
 resource "aws_lb" "example" {
@@ -160,4 +157,19 @@ resource "aws_lb_listener_rule" "asg" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.asg.arn
   }
+}
+
+# Configure terraform to store state in S3 bucket (encryption and locking) w/ backend configuration
+terraform {
+  backend "s3" {
+    bucket = "lrofpqx"
+    # filepath in s3 bucket where tf state file written
+    key = "stage/services/webserver-cluster/terraform.tfstate"
+    region = "us-east-2"
+
+    #dynamodb table
+    dynamodb_table = "terraform-up-and-running-locks"
+    encrypt = true
+  }
+  
 }

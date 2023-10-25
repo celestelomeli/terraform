@@ -53,28 +53,13 @@ resource "aws_dynamodb_table" "terraform_locks" {
     }
 }
 
-# Configure terraform to store state in S3 bucket (encryption and locking) w/ backend configuration
-terraform {
-  backend "s3" {
-    bucket = "lrofpqx"
-    # filepath in s3 bucket where tf state file written
-    key = "global/s3/terraform.tfstate"
-    region = "us-east-2"
+resource "aws_s3_bucket" "terraform_state" {
 
-    #dynamodb table
-    dynamodb_table = "terraform-up-and-running-locks"
-    encrypt = true
-  }
-  
+  bucket = var.bucket_name
+
+  // This is only here so we can destroy the bucket as part of automated tests. You should not copy this for production
+  // usage
+  force_destroy = true
+
 }
 
-# Print out Amazon Resource Name (ARN) of S3 bucket
-output "s3_bucket_arn" {
-    value = aws_s3_bucket.terraform_state.arn
-    description = "The ARN of the S3 bucket"
-}
-
-output "dynamodb_table_name" {
-    value = aws_dynamodb_table.terraform_locks.name
-    description = "terraform-up-and-running-locks"
-}
