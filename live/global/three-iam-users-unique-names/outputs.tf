@@ -9,6 +9,7 @@ output "all_arns" {
   description = "The ARNs for all users"
 }
 
+# Use a ternary condition to select the IAM policy ARN based on "give_neo_cloudwatch_full_access."
 output "neo_cloudwatch_policy_arn_ternary" {
   value = (
     var.give_neo_cloudwatch_full_access
@@ -17,6 +18,7 @@ output "neo_cloudwatch_policy_arn_ternary" {
   )
 }
 
+# Concatenate and select IAM policy ARNs for an IAM user based on the policies attached.
 output "neo_cloudwatch_policy_arn" {
   value = one(concat(
     aws_iam_user_policy_attachment.neo_cloudwatch_full_access[*].policy_arn,
