@@ -34,13 +34,13 @@ module "webserver_cluster" {
   enable_autoscaling = false
 }
 
-
+# Create a security group rule to allow inbound traffic on a specific port (12345) for testing purposes
 resource "aws_security_group_rule" "allow_testing_inbound" {
-  type              = "ingress"
+  type              = "ingress" # Define rule for incoming traffic 
   security_group_id = module.webserver_cluster.alb_security_group_id
 
-  from_port   = 12345
-  to_port     = 12345
-  protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
+  from_port   = 12345   # Allow traffic from port 12345
+  to_port     = 12345   # Allow traffic to port 12345
+  protocol    = "tcp"   # Allow TCP protocol traffic 
+  cidr_blocks = ["0.0.0.0/0"]   # Allow traffic from any source 
 }

@@ -57,8 +57,9 @@ resource "aws_s3_bucket" "terraform_state" {
 
   bucket = var.bucket_name
 
-  // This is only here so we can destroy the bucket as part of automated tests. You should not copy this for production
-  // usage
+  # This is only here so we can destroy the bucket as part of automated tests
+  # should not copy this for production usage
+ 
   force_destroy = true
 
 }

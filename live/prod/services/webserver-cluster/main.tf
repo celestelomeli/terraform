@@ -6,7 +6,7 @@ provider "aws" {
    # Tags to apply to all AWS resources by default
   default_tags {
     tags = {
-      Owner     = "team-foo"
+      Owner     = "celestelomeli"
       ManagedBy = "Terraform"
      }
   }
@@ -36,10 +36,12 @@ module "webserver_cluster" {
   instance_type = "t2.micro"
   min_size      = 2
   max_size      = 10
+  # ASG will automatically adjust number of instances based on demand
   enable_autoscaling = true # var.enable_autoscaling
 
+  # custom tags to apply to instances launched within module
   custom_tags = {
-    Owner = "team-foo"
+    Owner = "celestelomeli"
     ManagedBy = "terraform"
   }
 }
