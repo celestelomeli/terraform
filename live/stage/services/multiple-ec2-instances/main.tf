@@ -4,7 +4,7 @@ provider "aws" {
 
 # Create 3 EC2 instances using the same AMI and instance type (fixed count)
 resource "aws_instance" "example_1" {
-  count         = 3  # create 3 instances 
+  count         = 1 # create 3 instances 
   ami           = "ami-0fb653ca2d3203ac1"  # AMI to use
   instance_type = "t2.micro"  # EC2 instance type
 }

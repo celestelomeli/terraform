@@ -27,7 +27,7 @@ terraform {
 
 
 module "webserver_cluster" {
-  source = "github.com/celestelomeli/modules//services/webserver-cluster?ref=v0.0.2"
+  source = "github.com/celestelomeli/modules//services/webserver-cluster?ref=v0.0.3"
 
   cluster_name           = var.cluster_name
   db_remote_state_bucket = var.db_remote_state_bucket
@@ -35,7 +35,7 @@ module "webserver_cluster" {
 
   instance_type = "t2.micro"
   min_size      = 2
-  max_size      = 10
+  max_size      = 2
   # ASG will automatically adjust number of instances based on demand
   enable_autoscaling = true # var.enable_autoscaling
 
